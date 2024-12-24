@@ -79,6 +79,14 @@
     .login-container a:hover {
       text-decoration: underline;
     }
+
+     /* Error message style */
+    .error-message {
+      color: red;
+      margin-top: 10px;
+      font-size: 16px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -88,6 +96,12 @@
       <input type="text" name="Email" placeholder="Email" required>
       <input type="password" name="password" placeholder="Password" required>
       <input type="submit" value="Log In">
+
+      <?php
+      if (isset($error_message)) {
+          echo "<div class='error-message'>$error_message</div>";
+      }
+    ?>
     </form>
   </div>
 </body>
@@ -134,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: user.php");
             exit();
         } else {
-            echo "Invalid password.";
+          echo "<script>alert('Invalid password.');</script>";
         }
     } else {
         echo "No user found with this email.";
