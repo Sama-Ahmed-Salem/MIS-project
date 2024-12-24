@@ -183,7 +183,9 @@
     <div class="dashboard">
         <header class="header">
             <h1>Welcome to CampusCravingHub Dashboard</h1>
-            <button class="logout-btn">Logout</button>
+            <form action="logout.php" method="POST" id="logout-form">
+    <button class="logout-btn" type="button">Logout</button>
+</form>
         </header>
         <div class="restaurant-gallery">
             <div class="restaurant" onclick="showMenu(1)">
@@ -353,9 +355,12 @@
     }
 
     // Logout functionality
-    document.querySelector('.logout-btn').addEventListener('click', function() {
-        alert('Logged out!');
-    });
+    document.querySelector('.logout-btn').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the default action (form submission)
+    
+    // Redirect to logout.php
+    window.location.href = 'logout.php'; // This will go to logout.php
+});
     </script>
 </body>
 </html>

@@ -84,12 +84,63 @@
 <body>
   <div class="login-container">
     <h2>Login</h2>
-    <form action="/login" method="POST">
-      <input type="text" name="username" placeholder="Username" required>
+    <form action="login.php" method="POST">
+      <input type="text" name="Email" placeholder="Email" required>
       <input type="password" name="password" placeholder="Password" required>
       <input type="submit" value="Log In">
     </form>
-    <a href="#">Forgot your password?</a>
   </div>
 </body>
 </html>
+
+
+<?php
+session_start();
+$host = "localhost";
+$user = "root";
+$password = "";
+$dbname = "campuscravinghub";
+
+// Database connection
+$conn = new mysqli($host, $user, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Handle POST request
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Debug $_POST array
+    // print_r($_POST);
+
+    // Retrieve and sanitize form inputs
+    $email = $conn->real_escape_string($_POST['Email']);
+    $password = $conn->real_escape_string($_POST['password']); // Lowercase 'password'
+
+    // Query user by email
+    $sql = "SELECT * FROM users WHERE Email = '$email'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $dbPassword = $row['Password']; // Stored hashed password
+
+        // Verify password
+        if (password_verify($password, $dbPassword)) {
+            // Login successful
+            $_SESSION['user_id'] = $row['UserId'];
+            $_SESSION['email'] = $row['Email'];
+
+            // Redirect to dashboard
+            header("Location: user.php");
+            exit();
+        } else {
+            echo "Invalid password.";
+        }
+    } else {
+        echo "No user found with this email.";
+    }
+}
+$conn->close();
+?>
+
+
