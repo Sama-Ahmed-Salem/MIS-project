@@ -110,22 +110,12 @@
 
 <?php
 session_start();
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "campuscravinghub";
 
-// Database connection
-$conn = new mysqli($host, $user, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Include database connection
+include 'databaseconnection.php';
 
 // Handle POST request
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Debug $_POST array
-    // print_r($_POST);
-
     // Retrieve and sanitize form inputs
     $email = $conn->real_escape_string($_POST['Email']);
     $password = $conn->real_escape_string($_POST['password']); // Lowercase 'password'
@@ -148,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: user.php");
             exit();
         } else {
-          echo "<script>alert('Invalid password.');</script>";
+            echo "<script>alert('Invalid password.');</script>";
         }
     } else {
         echo "No user found with this email.";
@@ -156,5 +146,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 $conn->close();
 ?>
-
 

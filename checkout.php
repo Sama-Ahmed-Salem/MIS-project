@@ -138,58 +138,79 @@
     </div>
 
     <script>
-        // Retrieve cart from sessionStorage
-        const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+    // Retrieve cart from sessionStorage
+    const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 
-        // Function to populate order summary dynamically
-        function populateOrderSummary() {
-            const orderList = document.getElementById("order-list");
-            let total = 0;
+    // Function to populate order summary dynamically
+    function populateOrderSummary() {
+        const orderList = document.getElementById("order-list");
+        let total = 0;
 
-            cart.forEach(item => {
-                const li = document.createElement("li");
-                li.innerText = `${item.name} - $${item.price}`;
-                orderList.appendChild(li);
-                total += item.price;
-            });
-
-            // Display total price
-            document.getElementById("order-total").innerText = total;
-        }
-
-        // Show delivery building options if the delivery option is selected
-        document.getElementById("delivery-option").addEventListener("change", function() {
-            const buildingOptions = document.getElementById("building-options");
-            if (this.value === "delivery") {
-                buildingOptions.style.display = "block";
-            } else {
-                buildingOptions.style.display = "none";
-            }
+        cart.forEach(item => {
+            const li = document.createElement("li");
+            li.innerText = `${item.name} - $${item.price}`;
+            orderList.appendChild(li);
+            total += item.price;
         });
 
-        // Function to handle checkout
-        function submitCheckout() {
-            const deliveryOption = document.getElementById("delivery-option").value;
-            const paymentOption = document.getElementById("payment-option").value;
-            const buildingOption = deliveryOption === "delivery" ? document.getElementById("delivery-building").value : "N/A"; // Pickup doesn't need a building
+        // Display total price
+        document.getElementById("order-total").innerText = total;
+    }
 
-            alert(`
-                Order Summary:
-                -----------------------
-                Delivery Option: ${deliveryOption}
-                Delivery Building: ${buildingOption}
-                Payment Option: ${paymentOption}
-                
-                Total Amount: $${document.getElementById("order-total").innerText}
-            `);
-
-            // You can perform further actions like submitting the order to the server here
+    // Show delivery building options if the delivery option is selected
+    document.getElementById("delivery-option").addEventListener("change", function () {
+        const buildingOptions = document.getElementById("building-options");
+        if (this.value === "delivery") {
+            buildingOptions.style.display = "block";
+        } else {
+            buildingOptions.style.display = "none";
         }
+    });
 
-        // Populate the order summary when the page loads
-        window.onload = function() {
-            populateOrderSummary();
-        };
-    </script>
+    // Function to handle checkout
+    function submitCheckout() {
+        const deliveryOption = document.getElementById("delivery-option").value;
+        const paymentOption = document.getElementById("payment-option").value;
+        const buildingOption =
+            deliveryOption === "delivery" ? document.getElementById("delivery-building").value : "N/A"; // Pickup doesn't need a building
+
+        const totalAmount = document.getElementById("order-total").innerText;
+
+        // Send order details to the server
+        fetch("save_order.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                cart: cart,
+                deliveryOption: deliveryOption,
+                paymentOption: paymentOption,
+                buildingOption: buildingOption,
+                totalAmount: totalAmount,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    alert("Order placed successfully!");
+                    sessionStorage.removeItem("cart"); // Clear the cart
+                    window.location.href = "order_summary.php"; // Redirect to confirmation page
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
+    }
+
+    // Populate the order summary when the page loads
+    window.onload = function () {
+        populateOrderSummary();
+    };
+</script>
+
 </body>
 </html>
