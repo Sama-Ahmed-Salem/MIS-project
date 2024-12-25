@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 24, 2024 at 02:14 PM
+-- Generation Time: Dec 25, 2024 at 08:46 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -107,13 +107,48 @@ INSERT INTO `menu` (`FoodName`, `Price`, `RestaurantId`) VALUES
 CREATE TABLE `orders` (
   `OrderId` int(11) NOT NULL,
   `UserId` int(11) NOT NULL,
-  `RestaurantId` int(11) NOT NULL,
-  `FoodName` varchar(255) NOT NULL,
-  `TotalPrice` decimal(10,0) NOT NULL,
-  `PaymentMethodId` int(11) NOT NULL,
-  `DeliveryId` int(11) NOT NULL,
-  `Quantity` int(11) NOT NULL
+  `DeliveryOption` varchar(50) NOT NULL,
+  `PaymentOption` varchar(50) NOT NULL,
+  `BuildingOption` varchar(50) DEFAULT NULL,
+  `TotalAmount` decimal(10,2) NOT NULL,
+  `OrderDate` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`OrderId`, `UserId`, `DeliveryOption`, `PaymentOption`, `BuildingOption`, `TotalAmount`, `OrderDate`) VALUES
+(1, 1, 'pickup', 'cash', 'N/A', 50.00, '2024-12-25 19:21:30'),
+(2, 1, 'delivery', 'visa', 'R', 220.00, '2024-12-25 19:23:09'),
+(3, 2, 'pickup', 'visa', 'N/A', 150.00, '2024-12-25 19:34:33'),
+(4, 2, 'delivery', 'instapay', 'R', 80.00, '2024-12-25 19:43:36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `ItemId` int(11) NOT NULL,
+  `OrderId` int(11) NOT NULL,
+  `ItemName` varchar(255) NOT NULL,
+  `ItemPrice` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`ItemId`, `OrderId`, `ItemName`, `ItemPrice`) VALUES
+(1, 1, 'Brownies', 50.00),
+(2, 2, 'Coffee', 100.00),
+(3, 2, 'Caramel peacan cinnabon', 120.00),
+(4, 3, 'Man2ocha za3tar', 60.00),
+(5, 3, 'Man2ocha labna', 90.00),
+(6, 4, 'Cupcake', 45.00),
+(7, 4, 'Coffee', 35.00);
 
 -- --------------------------------------------------------
 
@@ -209,11 +244,14 @@ ALTER TABLE `menu`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`OrderId`),
-  ADD KEY `UserId` (`UserId`),
-  ADD KEY `RestaurantId` (`RestaurantId`),
-  ADD KEY `FoodName` (`FoodName`,`RestaurantId`),
-  ADD KEY `orders_ibfk_4` (`DeliveryId`),
-  ADD KEY `orders_ibfk_5` (`PaymentMethodId`);
+  ADD KEY `UserId` (`UserId`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`ItemId`),
+  ADD KEY `OrderId` (`OrderId`);
 
 --
 -- Indexes for table `paymentmethod`
@@ -241,7 +279,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `OrderId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `OrderId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `ItemId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -257,11 +301,13 @@ ALTER TABLE `menu`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`RestaurantId`) REFERENCES `restaurants` (`RestaurantId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`FoodName`,`RestaurantId`) REFERENCES `menu` (`FoodName`, `RestaurantId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`DeliveryId`) REFERENCES `deliverydetails` (`DeliveryId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `orders_ibfk_5` FOREIGN KEY (`PaymentMethodId`) REFERENCES `paymentmethod` (`PaymentMethodId`) ON DELETE CASCADE;
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`OrderId`) REFERENCES `orders` (`OrderId`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
