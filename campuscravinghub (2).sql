@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 25, 2024 at 08:46 PM
+-- Generation Time: Dec 26, 2024 at 08:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -20,25 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `campuscravinghub`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `deliverydetails`
---
-
-CREATE TABLE `deliverydetails` (
-  `DeliveryId` int(11) NOT NULL,
-  `DeliveryDetails` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `deliverydetails`
---
-
-INSERT INTO `deliverydetails` (`DeliveryId`, `DeliveryDetails`) VALUES
-(0, 'Pickup'),
-(1, 'Delivery');
 
 -- --------------------------------------------------------
 
@@ -77,26 +58,11 @@ INSERT INTO `menu` (`FoodName`, `Price`, `RestaurantId`) VALUES
 ('Fool Sandwich', 8, 2),
 ('Fries', 55, 1),
 ('Fries Sandwich', 17, 2),
-('Grilled Chicken Sandwich', 75, 8),
-('Man2ocha Chicken', 100, 4),
 ('Man2ocha Labna', 90, 4),
-('Man2ocha Shawrma', 110, 4),
+('Man2ocha Meat', 100, 4),
 ('Man2ocha Za3tar', 60, 4),
-('mini cup Cinabon ', 85, 7),
-('Mini Man2ocha', 20, 4),
-('Pepsi', 15, 1),
-('Pizza', 85, 0),
-('Pizza Chicken Ranch', 65, 5),
-('PizzaPeperoni', 65, 5),
-('Salad', 70, 0),
-('Salad', 90, 5),
-('Sandwich', 75, 0),
-('Sandwich', 180, 6),
-('Strips Sandwich', 75, 3),
-('Tart', 120, 6),
-('Tony Sandwich', 75, 2),
-('Water', 8, 1),
-('Zalabya', 45, 3);
+('Pizza', 60, 5),
+('Salad', 90, 5);
 
 -- --------------------------------------------------------
 
@@ -225,12 +191,6 @@ INSERT INTO `users` (`UserId`, `Email`, `Password`) VALUES
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `deliverydetails`
---
-ALTER TABLE `deliverydetails`
-  ADD PRIMARY KEY (`DeliveryId`);
 
 --
 -- Indexes for table `menu`
