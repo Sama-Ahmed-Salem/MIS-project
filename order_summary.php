@@ -99,7 +99,7 @@ th {
         </ul>
 
 
-        <form action="user.php" method="POST" id="home-form">
+        <form action="rating.php" method="POST" id="home-form">
     <button class="home-btn" type="submit">Back To Home Page</button>
 </form>
 
